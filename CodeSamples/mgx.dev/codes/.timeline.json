@@ -1,0 +1,23 @@
+{
+  "timeline_index": 4,
+  "planner": {},
+  "gallery_last_file": {},
+  "timeline_status": {
+    "2": 1,
+    "3": 0,
+    "4": 1
+  },
+  "preview_servers": {
+    "273e0492-cb6e-42a4-b21f-809e67742577": {
+      "role": "Alex",
+      "port": 8502,
+      "subdomain": "timetable-generator-5d87nd-0m5ew-742577",
+      "server": "48e27d68-771e-486b-bdfd-559d3900db92",
+      "cmd": "streamlit run app.py --server.port=8502",
+      "timeline_index": 3,
+      "status": "success",
+      "logs": []
+    }
+  },
+  "deploy": {}
+}
