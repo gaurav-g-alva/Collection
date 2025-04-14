@@ -1,0 +1,99 @@
+classDiagram
+    class User {
+        +int id
+        +str email
+        +str password_hash
+        +str full_name
+        +UserRole role
+        +datetime created_at
+        +datetime last_login
+        +bool is_active
+        +authenticate(password: str) bool
+        +create_password_hash(password: str) str
+    }
+
+    class Course {
+        +int id
+        +str code
+        +str name
+        +CourseType type
+        +int credits
+        +int theory_hours
+        +int lab_hours
+        +int semester
+        +int priority
+        +bool is_active
+        +validate_hours() bool
+    }
+
+    class Faculty {
+        +int id
+        +int user_id
+        +List[TimeSlot] availability
+        +int max_hours_per_week
+        +List[Course] expertise
+        +get_available_slots() List[TimeSlot]
+        +update_availability(slots: List[TimeSlot])
+    }
+
+    class TimeSlot {
+        +int id
+        +DayOfWeek day
+        +Time start_time
+        +Time end_time
+        +bool is_available
+        +validate_time_range() bool
+    }
+
+    class Timetable {
+        +int id
+        +str semester
+        +datetime generated_at
+        +TimetableStatus status
+        +List[Schedule] schedules
+        +generate() bool
+        +validate() bool
+        +export_pdf() bytes
+    }
+
+    class Schedule {
+        +int id
+        +int timetable_id
+        +int course_id
+        +int faculty_id
+        +TimeSlot time_slot
+        +bool is_valid
+        +validate_conflicts() bool
+    }
+
+    class ChangeRequest {
+        +int id
+        +int faculty_id
+        +int schedule_id
+        +str reason
+        +RequestStatus status
+        +datetime requested_at
+        +datetime resolved_at
+        +approve()
+        +reject(str reason)
+    }
+
+    class TimetableGenerator {
+        -List[Course] courses
+        -List[Faculty] faculty
+        -List[TimeSlot] time_slots
+        -Dict constraints
+        +initialize_population()
+        +evaluate_fitness(schedule: Schedule)
+        +apply_genetic_algorithm()
+        +generate_timetable() Timetable
+    }
+
+    User "1" -- "0..1" Faculty
+    Faculty "1" -- "*" Course
+    Faculty "1" -- "*" TimeSlot
+    Timetable "1" -- "*" Schedule
+    Schedule "1" -- "1" Course
+    Schedule "1" -- "1" Faculty
+    Schedule "1" -- "1" TimeSlot
+    Faculty "1" -- "*" ChangeRequest

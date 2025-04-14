@@ -1,0 +1,41 @@
+sequenceDiagram
+    participant Client
+    participant Auth
+    participant API
+    participant Generator
+    participant DB
+
+    %% Authentication
+    Client->>Auth: Login(credentials)
+    Auth->>DB: Validate credentials
+    DB-->>Auth: User data
+    Auth-->>Client: JWT token
+
+    %% Generate Timetable
+    Client->>API: Request timetable generation
+    API->>DB: Get courses and constraints
+    DB-->>API: Course data
+    API->>DB: Get faculty availability
+    DB-->>API: Faculty data
+    API->>Generator: Generate timetable
+    Generator->>Generator: Initialize population
+    Generator->>Generator: Evaluate fitness
+    Generator->>Generator: Selection
+    Generator->>Generator: Crossover
+    Generator->>Generator: Mutation
+    Generator-->>API: Generated timetable
+    API->>DB: Save timetable
+    API-->>Client: Success response
+
+    %% View Timetable
+    Client->>API: Get timetable
+    API->>DB: Fetch timetable
+    DB-->>API: Timetable data
+    API-->>Client: Return timetable
+
+    %% Export PDF
+    Client->>API: Export PDF
+    API->>DB: Get timetable data
+    DB-->>API: Timetable data
+    API->>API: Generate PDF
+    API-->>Client: PDF file

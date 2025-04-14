@@ -1,0 +1,74 @@
+classDiagram
+    class User {
+        +int id
+        +str email
+        +str password_hash
+        +str full_name
+        +Role role
+        +bool is_active
+        +authenticate(password: str)
+        +create()
+        +update()
+    }
+
+    class Course {
+        +int id
+        +str code
+        +str name
+        +CourseType type
+        +int credits
+        +int theory_hours
+        +int lab_hours
+        +int semester
+        +validate()
+        +create()
+        +update()
+    }
+
+    class Faculty {
+        +int id
+        +int user_id
+        +List[TimeSlot] availability
+        +int max_hours
+        +List[Course] expertise
+        +get_availability()
+        +update_availability()
+    }
+
+    class TimeSlot {
+        +int id
+        +DayOfWeek day
+        +Time start_time
+        +Time end_time
+        +bool is_available
+        +validate()
+    }
+
+    class Timetable {
+        +int id
+        +str semester
+        +datetime generated_at
+        +Status status
+        +List[Schedule] schedules
+        +generate()
+        +validate()
+        +export_pdf()
+    }
+
+    class TimetableGenerator {
+        -population_size: int
+        -mutation_rate: float
+        -crossover_rate: float
+        +initialize_population()
+        +evaluate_fitness()
+        +selection()
+        +crossover()
+        +mutation()
+        +evolve()
+    }
+
+    User "1" -- "0..1" Faculty
+    Faculty "1" -- "*" Course
+    Faculty "1" -- "*" TimeSlot
+    Timetable "1" -- "*" Course
+    Timetable -- TimetableGenerator

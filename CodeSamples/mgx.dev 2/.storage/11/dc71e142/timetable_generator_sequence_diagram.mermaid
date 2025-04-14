@@ -1,0 +1,57 @@
+sequenceDiagram
+    participant U as User
+    participant A as AuthService
+    participant T as TimetableSystem
+    participant G as Generator
+    participant D as Database
+
+    %% User Authentication
+    U->>A: Login(credentials)
+    A->>D: Verify credentials
+    D-->>A: User data
+    A-->>U: JWT token
+
+    %% Admin Flow - Generate Timetable
+    U->>T: Request timetable generation
+    T->>D: Fetch courses & constraints
+    D-->>T: Course data
+    T->>D: Fetch faculty availability
+    D-->>T: Faculty data
+    T->>G: Initialize population
+    G->>G: Apply genetic algorithm
+    G->>G: Evaluate fitness
+    G->>G: Selection & crossover
+    G->>G: Mutation
+    G-->>T: Generated timetable
+    T->>D: Save timetable
+    D-->>T: Success
+    T-->>U: Display timetable
+
+    %% Faculty Flow - Request Change
+    U->>T: Submit change request
+    T->>D: Save request
+    D-->>T: Request ID
+    T-->>U: Confirmation
+
+    %% Admin Flow - Review Change Request
+    U->>T: View change requests
+    T->>D: Fetch requests
+    D-->>T: Request data
+    T-->>U: Display requests
+    U->>T: Approve/Reject request
+    T->>D: Update request status
+    D-->>T: Success
+    alt Request Approved
+        T->>G: Regenerate timetable
+        G-->>T: New timetable
+        T->>D: Update timetable
+        D-->>T: Success
+    end
+    T-->>U: Update confirmation
+
+    %% Export Timetable
+    U->>T: Request PDF export
+    T->>D: Fetch timetable data
+    D-->>T: Timetable data
+    T->>T: Generate PDF
+    T-->>U: Download PDF
