@@ -1,0 +1,6 @@
+streamlit
+pandas
+bcrypt
+matplotlib
+seaborn
+reportlab
